@@ -20,18 +20,27 @@ public class CreateSessionsHandler extends DefaultSessionsHandler {
     public ApiGatewayProxyResponse handle(String sessionId) {
         logger.info("Creating session.");
 
-        final Session session = new Session(sessionId);
+        try {
+            final Session session = sessionStore.get(sessionId);
 
-        logger.info("Saving session");
-        logger.trace(session);
+            return ApiGatewayProxyResponse.builder()
+                    .withStatusCode(HttpStatusCode.NotModified)
+                    .withObjectBody(session)
+                    .build();
+        } catch (final Exception exception) {
+            final Session session = new Session(sessionId);
 
-        sessionStore.save(session);
+            logger.info("Saving session");
+            logger.trace(session);
 
-        logger.info("Stored session, returning OK.");
+            sessionStore.save(session);
 
-        return ApiGatewayProxyResponse.builder()
-                .withStatusCode(HttpStatusCode.OK)
-                .withObjectBody(session)
-                .build();
+            logger.info("Stored session, returning OK.");
+
+            return ApiGatewayProxyResponse.builder()
+                    .withStatusCode(HttpStatusCode.OK)
+                    .withObjectBody(session)
+                    .build();
+        }
     }
 }

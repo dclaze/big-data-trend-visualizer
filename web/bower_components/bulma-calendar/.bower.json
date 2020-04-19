@@ -1,0 +1,15 @@
+{
+  "name": "bulma-calendar",
+  "homepage": "https://github.com/Wikiki/bulma-calendar",
+  "version": "6.0.3",
+  "_release": "6.0.3",
+  "_resolution": {
+    "type": "version",
+    "tag": "v6.0.3",
+    "commit": "8b1daf37ef8be4324aeae5a52c227b3feb8d79a6"
+  },
+  "_source": "git://github.com/Wikiki/bulma-calendar.git",
+  "_target": "^6.0.3",
+  "_originalSource": "git://github.com/Wikiki/bulma-calendar.git",
+  "_direct": true
+}

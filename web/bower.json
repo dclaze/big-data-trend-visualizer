@@ -1,0 +1,20 @@
+{
+  "name": "big-data-trends-visualizer-web",
+  "description": "an implementation of using hadoop to process big data and visualize it in a web ui",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bulma": "^0.8.2",
+    "fontawesome": "^5.13.0",
+    "jquery": "^3.5.0",
+    "vue": "^2.6.11",
+    "moment": "^2.24.0",
+    "bulma-calendar": "git://github.com/Wikiki/bulma-calendar.git#^6.0.3",
+    "axios": "^0.19.2"
+  }
+}

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Big Data Trends Visualizer - Visualizer</title>
+  <meta name="description" content="an implementation of using hadoop to process big data and visualize it in a web ui">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="../bower_components/bulma/css/bulma.min.css">
+  <link rel="stylesheet" href="../bower_components/bulma-calendar/dist/css/bulma-calendar.min.css">
+
+  <script type="text/javascript" src="../bower_components/jquery/dist/jquery.min.js"></script>
+  <script defer src="../bower_components/fontawesome/js/all.min.js"></script>
+  <script type="text/javascript" src="../bower_components/vue/dist/vue.min.js"></script>
+  <script type="text/javascript" src="../bower_components/bulma-calendar/dist/js/bulma-calendar.min.js"></script>
+  <script type="text/javascript" src="../bower_components/moment/moment.js"></script>
+  <script type="text/javascript" src="../bower_components/axios/dist/axios.min.js"></script>
+  <style media="screen">
+    .trend {
+      border: solid 1px black;
+      margin: 10px;
+    }
+
+    .trend-label {
+      margin-top: 6px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <nav class="navbar is-black" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <a class="navbar-item title is-dark">
+        Big Data Trends Visualizer
+      </a>
+      </div>
+      <div class="navbar-menu">
+        <!-- Left Align Menu Items -->
+      </div>
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <div class="has-text-centered">
+            <span class="icon">
+            <i class="fas fa-user"></i>
+          </span>
+            <div class="">
+              {{username}}
+            </div>
+          </div>
+        </div>
+        <div class="navbar-item" v-if="username">
+          <div class="buttons">
+            <a class="button" @click="signOut()" v-bind:class="{ 'is-loading': loading }">
+              <strong>Sign out</strong>
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <section class="container section">
+      <div class="field is-horizontal">
+        <div class="field-body">
+          <div class="field has-addons has-addons-right">
+            <p class="control has-icons-left">
+              <span class="select">
+                <select v-model="stockSymbol">
+                  <option disabled selected :value="null">Stock Symbol</option>
+                  <option v-for="stockSymbol in stocks" v-bind:value="stockSymbol">
+                    {{ stockSymbol }}
+                  </option>
+                </select>
+              </span>
+              <span class="icon is-small is-left">
+                <i class="fas fa-chart-line"></i>
+              </span>
+            </p>
+          </div>
+          <div class="field">
+            <div class="control">
+              <input v-model="date" ref="calendarTrigger" class="input" data-color="info" type="date" data-show-footer="false" data-show-buttons="false" data-show-header="false" data-show-buttons="false" data-show-clear-button="false">
+            </div>
+          </div>
+          <div class="field">
+            <div class="control">
+              <button class="button is-link" @click="calculateTrend()" v-bind:class="{ 'is-loading': loading }">Calculate Trend</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="notification is-danger" v-if="error">
+        {{error}}
+      </div>
+    </section>
+    <section class="container section">
+      <nav class="panel">
+        <p class="panel-heading">
+          Trends
+        </p>
+        <div class="container" v-if="!trends || trends.length === 0">
+          <div class="notification">
+            There are no trends available yet, try calculating one above.
+          </div>
+        </div>
+        <div v-else>
+          <div class="box">
+            <div class="columns" v-for="trend in trends">
+              <div class="column is-one-quarters">
+                <div class="field is-horizontal">
+                  <div class="field-label is-normal">
+                    <label class="label">Stock</label>
+                  </div>
+                  <div class="field-body trend-label">
+                    {{trend.stock}}
+                  </div>
+                </div>
+                <div class="field is-horizontal">
+                  <div class="field-label is-normal">
+                    <label class="label">Date</label>
+                  </div>
+                  <div class="field-body trend-label">
+                    {{trend.date | formatDate }}
+                  </div>
+                </div>
+              </div>
+              <div class="trend column is-three-quarters">
+                {{trend.status}}
+
+                TODO ADD SOME GRAPHS HERE OR SOMETHING
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </section>
+  </div>
+  </div>
+  <script type="text/javascript" src="../constants/apis.js"></script>
+  <script type="text/javascript">
+    // TODO Power this from server
+    const STOCKS = [
+      'AMZN',
+      'MSFT',
+      'AAPL',
+      'GOOGL',
+      'FB',
+    ];
+
+    new Vue({
+      el: '#app',
+      data: {
+        date: new Date(),
+        error: null,
+        loading: false,
+        trends: [],
+        stockSymbol: STOCKS[0],
+        stocks: STOCKS,
+        username: localStorage.getItem("username") || null,
+      },
+      mounted() {
+        const calendar = bulmaCalendar.attach(this.$refs.calendarTrigger, {
+          startDate: this.date,
+        })[0];
+        var self = this;
+        calendar.on('select', function(e) {
+            self.date = e.start || e.data.startDate|| null;
+        });
+      },
+      created: function() {
+        this.initializeSession();
+      },
+      methods: {
+        initializeSession: function() {
+          if (!this.username) {
+            this.navigateHome();
+
+            return;
+          }
+
+          this.loading = true;
+
+          var self = this;
+          $.get(window.API_URL + '/sessions/' + self.username)
+            .done(function(response) {
+              self.loading = false;
+              self.trends = response.trends;
+            })
+            .fail(function(error) {
+              self.loading = false;
+              self.navigateHome();
+            });
+        },
+        calculateTrend: function() {
+          if (!this.username || !this.stockSymbol || !this.date) {
+            this.error = "Missing fields, try choosing one of the above fields. " + JSON.stringify({
+              username: this.username,
+              stockSymbol: this.stockSymbol,
+              date: this.date,
+            });
+
+            return;
+          }
+
+          this.error = null;
+          this.loading = true;
+
+          var self = this;
+
+          axios({
+              method: 'post',
+              url: window.API_URL + '/trends',
+              data: {
+                sessionId: self.username,
+                stockSymbol: self.stockSymbol,
+                date: new Date(self.date).toISOString(),
+              },
+              responseType: 'json',
+            })
+            .then(function(response) {
+              self.loading = false;
+              self.trends = response.data.trends;
+            })
+            .catch(function(error) {
+              self.loading = false;
+              self.navigateHome();
+            });
+
+        },
+        signOut: function() {
+          localStorage.removeItem('username');
+
+          this.navigateHome();
+        },
+        navigateHome: function() {
+          window.location = '../home';
+        }
+      },
+      filters: {
+        formatDate: function(value) {
+          if (value) {
+            return moment(String(value)).format('MM/DD/YYYY')
+          }
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

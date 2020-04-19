@@ -18,7 +18,6 @@ provider:
         - dynamodb:DeleteItem
       Resource:
         - { "Fn::GetAtt": ["SessionsTable", "Arn" ] }
-        - { "Fn::GetAtt": ["TrendsTable", "Arn" ] }
   timeout: 60
   environment:
     SESSIONS_TABLE: ${self:custom.SESSIONS_TABLE}
@@ -26,7 +25,6 @@ provider:
 
 custom:
   SESSIONS_TABLE: 'SESSIONS_TABLE'
-  TRENDS_TABLE: 'TRENDS_TABLE'
 
 package:
   artifact: 'target/${self:service}-${self:provider.stage}.jar'
@@ -44,32 +42,27 @@ functions:
       - http:
           path: /api/sessions/{id}
           method: get
+          cors: true
   delete-sessions:
     handler: org.njit.Sessions.DeleteSessionsHandler
     events:
       - http:
           path: /api/sessions/{id}
           method: delete
-
+          cors: true
+  create-trends:
+    handler: org.njit.Trends.CreateTrendsHandler
+    events:
+      - http:
+          path: /api/trends
+          method: post
+          cors: true
 resources:
   Resources:
     SessionsTable:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: ${self:custom.SESSIONS_TABLE}
-        AttributeDefinitions:
-          - AttributeName: Id
-            AttributeType: S
-        KeySchema:
-          - AttributeName: Id
-            KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-    TrendsTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: ${self:custom.TRENDS_TABLE}
         AttributeDefinitions:
           - AttributeName: Id
             AttributeType: S

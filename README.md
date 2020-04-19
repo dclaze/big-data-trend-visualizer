@@ -2,7 +2,7 @@
 
 an implementation of using hadoop to process big data and visualize it in a web ui
 
-Demo: [/web](https://dclaze.github.io/big-data-trend-visualizer/web)
+Demo: [/web](https://dclaze.github.io/big-data-trend-visualizer/web/home)
 
 ![Build Status](https://big-data-trends-visualizer-build-badges.s3.us-east-1.amazonaws.com/big-data-trends-visualizer.svg?cache=no)
 
@@ -10,7 +10,13 @@ Demo: [/web](https://dclaze.github.io/big-data-trend-visualizer/web)
 
 ## API
 ### Deploy
-#### Setup
+> Prior to running deploy steps, please complete 'Prerequisites'
+
+1. `cd api`
+2. `export AWS_PROFILE=big-data-trends-visualizer`
+3. `mvn package && serverless deploy`
+
+#### Prerequisites
 1. Install nvm, see https://github.com/nvm-sh/nvm
 2. Install node, run `nvm use v12`
 3. Install serverless, run `npm install -g serverless`
@@ -27,9 +33,21 @@ Demo: [/web](https://dclaze.github.io/big-data-trend-visualizer/web)
    aws_secret_access_key = ****************************************
    ```
 
-#### Run
-1. `export AWS_PROFILE=big-data-trends-visualizer`
-2. `mvn package && serverless deploy`
-
 ## Resources
 - [Google Drive Assets](https://drive.google.com/open?id=1LiMbmS4jtuIU6pJq253PPsLLYdJVAwwY)
+
+
+## Web
+The web front is composed of 2 views `web/home/index.html` and `web/visualizer/index.html`
+
+### Run Locally
+1. `cd web`
+2. `npm install`
+2. `npm start`
+3. Open URL `http://127.0.0.1:1643/home/` in web browser
+
+### Adding dependencies
+1. `cd web`
+2. `npm install`
+3. `npx bower install <package-name>`, see https://bower.io/ for more
+4. IMPORTANT: We are using github pages to host the webpage, please check in all `bower_components` files

@@ -45,7 +45,7 @@ public abstract class DefaultSessionsHandler implements RequestHandler<ApiGatewa
         try {
             return handle(getSessionId(request));
         } catch (final Exception exception) {
-            logger.error("Something went wrong, returning InternalServerError", exception);
+            logger.error(String.format("Something went wrong, returning InternalServerError %s", exception));
 
             return ApiGatewayProxyResponse.builder()
                     .withStatusCode(HttpStatusCode.InternalServerError)

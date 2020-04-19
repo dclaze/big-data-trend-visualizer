@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Big Data Trends Visualizer - Home</title>
+  <meta name="description" content="an implementation of using hadoop to process big data and visualize it in a web ui">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="../bower_components/bulma/css/bulma.min.css">
+  <script type="text/javascript" src="../bower_components/jquery/dist/jquery.min.js"></script>
+  <script defer src="../bower_components/fontawesome/js/all.min.js"></script>
+  <script type="text/javascript" src="../bower_components/vue/dist/vue.min.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <section class="hero is-bold is-dark">
+      <div class="hero-body">
+        <div class="container">
+          <h1 class="title">
+          Big Data Trends Visualizer
+        </h1>
+          <h2 class="subtitle">
+          an implementation of using hadoop to process big data and visualize it in a web ui
+        </h2>
+        </div>
+      </div>
+    </section>
+    <section class="section" style="padding-top: 100px;">
+      <div class="container">
+        <div class="buttons is-centered">
+          <div class="field has-addons">
+            <div class="control">
+              <input v-model="username" class="input" type="text" :placeholder="username || 'Username'" v-on:keyup.enter="startSession()">
+            </div>
+            <div class="control">
+              <a class="button is-info" v-bind:class="{ 'is-loading': loading }" @click="startSession()">
+                Start Session
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="notification is-danger" v-if="error">
+          {{error}}
+        </div>
+      </div>
+    </section>
+  </div>
+  <script type="text/javascript" src="../constants/apis.js"></script>
+  <script type="text/javascript">
+    new Vue({
+      el: '#app',
+      data: {
+        loading: false,
+        username: localStorage.getItem("username") || null,
+        error: null
+      },
+      created: function() {
+        this.initializeSession();
+      },
+      methods: {
+        initializeSession: function() {
+          if (!this.username) {
+            return;
+          }
+
+          this.loading = true;
+
+          var self = this;
+          $.get(window.API_URL + '/sessions/' + self.username)
+            .done(function(response) {
+              self.loading = false;
+              window.location = '../visualizer';
+            }).fail(function(error) {
+              self.loading = false;
+              self.username = null;
+              self.error = error;
+            });
+        },
+        startSession: function() {
+          if (!this.username) {
+            return;
+          }
+
+          this.loading = true;
+
+          var self = this;
+          $.post(window.API_URL + '/sessions/' + self.username)
+            .done(function(response) {
+              self.loading = false;
+              localStorage.setItem("username", self.username);
+              window.location = '../visualizer';
+            }).fail(function(error) {
+              self.loading = false;
+              self.username = null;
+              self.error = error;
+            });
+        },
+      }
+    });
+  </script>
+</body>
+
+</html>

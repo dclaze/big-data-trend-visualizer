@@ -115,6 +115,7 @@ public class ApiGatewayProxyResponse implements Serializable, Cloneable {
 
             if (isCORSEnabled) {
                 headers.put("Access-Control-Allow-Origin", "*");
+                headers.put("Access-Control-Allow-Credentials", "true");
             }
 
             return new ApiGatewayProxyResponse(statusCode.getStatusCode(), headers, body, isBase64Encoded);
