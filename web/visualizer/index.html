@@ -52,7 +52,7 @@
         </div>
         <div class="navbar-item" v-if="username">
           <div class="buttons">
-            <a class="button" @click="signOut()" v-bind:class="{ 'is-loading': loading }">
+            <a class="button" @click="signOut()" :disabled="loading" v-bind:class="{ 'is-loading': loading }">
               <strong>Sign out</strong>
             </a>
           </div>
@@ -84,7 +84,7 @@
           </div>
           <div class="field">
             <div class="control">
-              <button class="button is-link" @click="calculateTrend()" v-bind:class="{ 'is-loading': loading }">Calculate Trend</button>
+              <button class="button is-link" @click="calculateTrend()" :disabled="loading" v-bind:class="{ 'is-loading': loading }">Calculate Trend</button>
             </div>
           </div>
         </div>

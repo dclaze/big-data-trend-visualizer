@@ -35,7 +35,7 @@
               <input v-model="username" class="input" type="text" :placeholder="username || 'Username'" v-on:keyup.enter="startSession()">
             </div>
             <div class="control">
-              <a class="button is-info" v-bind:class="{ 'is-loading': loading }" @click="startSession()">
+              <a class="button is-info" :disabled="loading" v-bind:class="{ 'is-loading': loading }" @click="startSession()">
                 Start Session
               </a>
             </div>
@@ -60,8 +60,12 @@
         this.initializeSession();
       },
       methods: {
+        validSessionId: function() {
+          return this.username && !(/\s/.test(this.username))
+        },
         initializeSession: function() {
-          if (!this.username) {
+          if (!this.validSessionId()) {
+            this.username = null;
             return;
           }
 
@@ -79,7 +83,8 @@
             });
         },
         startSession: function() {
-          if (!this.username) {
+          if (!this.validSessionId()) {
+            this.error = "Username is not valid. Whitespace is not allowed. Allowed characters: a-z, A-Z, 0-9, _ (underscore), - (dash), . (dot)";
             return;
           }
 
@@ -88,9 +93,9 @@
           var self = this;
           $.post(window.API_URL + '/sessions/' + self.username)
             .done(function(response) {
-              self.loading = false;
               localStorage.setItem("username", self.username);
               window.location = '../visualizer';
+              self.loading = false;
             }).fail(function(error) {
               self.loading = false;
               self.username = null;
