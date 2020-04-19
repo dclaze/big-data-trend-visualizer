@@ -5,6 +5,4 @@ phases:
       - npm install -g serverless@1.3.0
   build:
     commands:
-      - cd api
-      - mvn package
-      - serverless deploy
+      - cd api && mvn package && serverless deploy
