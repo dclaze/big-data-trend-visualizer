@@ -1,0 +1,81 @@
+service: big-data-trend-visualizer-api
+
+frameworkVersion: "=1.3.0"
+
+provider:
+  name: aws
+  runtime: java8
+  stage: 'dev'
+  region: 'us-east-1'
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - { "Fn::GetAtt": ["SessionsTable", "Arn" ] }
+        - { "Fn::GetAtt": ["TrendsTable", "Arn" ] }
+  timeout: 60
+  environment:
+    SESSIONS_TABLE: ${self:custom.SESSIONS_TABLE}
+    TRENDS_TABLE: ${self:custom.TRENDS_TABLE}
+
+custom:
+  SESSIONS_TABLE: 'SESSIONS_TABLE'
+  TRENDS_TABLE: 'TRENDS_TABLE'
+
+package:
+  artifact: 'target/${self:service}-${self:provider.stage}.jar'
+
+functions:
+  create-sessions:
+    handler: org.njit.Sessions.CreateSessionsHandler
+    events:
+      - http:
+          path: /api/sessions/{id}
+          method: post
+  get-sessions:
+    handler: org.njit.Sessions.GetSessionsHandler
+    events:
+      - http:
+          path: /api/sessions/{id}
+          method: get
+  delete-sessions:
+    handler: org.njit.Sessions.DeleteSessionsHandler
+    events:
+      - http:
+          path: /api/sessions/{id}
+          method: delete
+
+resources:
+  Resources:
+    SessionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.SESSIONS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: Id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: Id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    TrendsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.TRENDS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: Id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: Id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1

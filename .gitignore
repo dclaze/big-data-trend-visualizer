@@ -1,0 +1,6 @@
+AWS_ACCOUNTS.md
+out
+target
+.serverless
+.idea
+api.iml
