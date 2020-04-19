@@ -1,6 +1,6 @@
 # big-data-trend-visualizer
 
-![Build Status](https://big-data-trends-visualizer-build-badges.s3.us-east-1.amazonaws.com/big-data-trends-visualizer.svg)
+![Build Status](https://big-data-trends-visualizer-build-badges.s3.us-east-1.amazonaws.com/big-data-trends-visualizer.svg?cache=no)
 
 an implementation of using hadoop to process big data and visualize it in a web ui
 
