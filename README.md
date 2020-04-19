@@ -6,6 +6,10 @@ an implementation of using hadoop to process big data and visualize it in a web 
 
 ![design](https://docs.google.com/drawings/d/e/2PACX-1vRg5tLiMZQMVOzlVNXohsZ4fYRICpZPz2uCeUSxUwCrHvEfHw_jsEnCTbVxwTIrlL2DLpt2rN6OAdJ5/pub?w=2077&h=1553)
 
+## Demo
+
+See [/web](/web)
+
 ## API
 ### Deploy
 #### Setup
