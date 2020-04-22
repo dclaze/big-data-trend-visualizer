@@ -6,7 +6,14 @@ Outputs into a CSV
 
 ## Usage
 1. Download a ITCH file from ftp://emi.nasdaq.com/ITCH/
-2. 
+2. This script parses the NASDAQ file from 01/30/2019. For other input files, replace line 8: 
+
+> f = open('01302019.NASDAQ_ITCH50', 'rb')
+
+with 
+
+> f = open('ITCH_file_path', 'rb')
+
 3. `python Castellano_VWAP.py 
   > python Castellano_VWAP.py 
 
