@@ -6,9 +6,9 @@ Outputs into a CSV
 
 ## Usage
 1. Download a ITCH file from ftp://emi.nasdaq.com/ITCH/
-2. `cd data/nasdaq`
-3. `python Castellano_VWAP.py <path_to_ITCH_file>`
-  > python parser.py 01302019.NASDAQ_ITCH50.gz
+2. 
+3. `python Castellano_VWAP.py 
+  > python Castellano_VWAP.py 
 
 4. This will run for a while and spit out files in the format of:
 
