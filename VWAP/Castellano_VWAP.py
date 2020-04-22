@@ -76,6 +76,7 @@ def no_mpid_add(record):  # Function processes Add Order-No MPID Attribution
 start_time = time.time()
 
 byte_counter = 0
+skip_messages = [12,25,20,26,19,40,35,23,31,44,50]
 while True:
     message_size = int.from_bytes(f.read(2), byteorder='big', signed=False)
     byte_counter = byte_counter + 2 + message_size
@@ -87,18 +88,7 @@ while True:
         message = f.read(36)
         no_mpid_add(message)
 
-    if message_size == 12 or \
-            message_size == 25 or \
-            message_size == 20 or \
-            message_size == 26 or \
-            message_size == 19 or \
-            message_size == 40 or \
-            message_size == 35 or \
-            message_size == 23 or \
-            message_size == 31 or \
-            message_size == 44 or \
-            message_size == 50:  # If message size is 12, it is a system type message or MWCB
-        f.read(message_size)  # Skip system and MWCB messages (Assumed not important for VWAP)
+    if message_size in skip_messages: # Skip system and MWCB messages (Assumed not important for VWAP)
         #  print('Skipped Message of size ', message_size)
 
     elif message_size == 39:
