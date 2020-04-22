@@ -1,5 +1,6 @@
 import datetime
 import struct
+import time
 
 import gzip
 import os
@@ -119,14 +120,18 @@ class ITCHFileChunker:
         data_frame = pd.DataFrame(data=data, columns=self.header)
         data_frame.to_csv(path, index=False)
 
-############################
+#########################################################
 # NASDAQ_ITCH Trade Parser
 # Parses NASDAQ_ITCH files into chunks defaults to hourly
 #
 # Usage: `python parse.py <filename>`
 # Example: python parse.py <filename>
-############################
+#########################################################
 if __name__ == '__main__':
+    start_time = datetime.datetime.now()
+
+    print "Started parsing at", start_time.strftime("%H:%M:%S")
+
     file = gzip.open(sys.argv[1], 'rb')
 
     current_key = None
@@ -136,7 +141,9 @@ if __name__ == '__main__':
     for key, message in ITCHTradeMessageIterator(file):
         if key != current_key:
             if current_key_data:
-                print("Writing chunk for key", current_key)
+                finished_key_time=datetime.datetime.now()
+                minutes = round((finished_key_time - start_time).total_seconds() / 60, 1)
+                print "Writing chunk for key", current_key, "at", finished_key_time.strftime("%H:%M:%S"), "in", minutes,"minutes"
                 file_chunker.write(current_key, current_key_data)
             current_key = key
             current_key_data = []
@@ -146,4 +153,11 @@ if __name__ == '__main__':
             current_key_data.append(message)
 
     if current_key and current_key_data:
+        finished_key_time=datetime.datetime.now()
+        minutes = round((finished_key_time - start_time).total_seconds() / 60, 1)
+        print "Writing chunk for key", current_key, "at", finished_key_time.strftime("%H:%M:%S"), "in", minutes,"minutes"
         file_chunker.write(current_key, current_key_data)
+
+    end_time = datetime.datetime.now()
+    print "Finished parsing at", end_time
+    print "Total minutes", round((end_time - start_time).total_seconds() / 60, 1)
