@@ -138,6 +138,19 @@
   </div>
   <script type="text/javascript" src="../constants/apis.js"></script>
   <script type="text/javascript">
+    function getQueryStringValue(key) {
+      return decodeURIComponent(window.location.search.replace(new RegExp("^(?:.*[&\\?]" + encodeURIComponent(key).replace(/[\.\+\*]/g, "\\$&") + "(?:\\=([^&]*))?)?.*$", "i"), "$1"));
+    }
+
+    function navigateHome() {
+      let stage = getQueryStringValue('stage');
+      let path = '../home';
+      if (stage) {
+        path += "?stage=" + stage;
+      }
+      window.location = path;
+    }
+
     // TODO Power this from server
     const STOCKS = [
       'AMZN',
@@ -171,9 +184,18 @@
         this.initializeSession();
       },
       methods: {
+        getAPIUrl: function() {
+          let stage = getQueryStringValue('stage');
+
+          if (stage === 'dev') {
+            return window.API_URL_DEV;
+          }
+
+          return window.API_URL_PROD;
+        },
         initializeSession: function() {
           if (!this.username) {
-            this.navigateHome();
+            navigateHome();
 
             return;
           }
@@ -181,14 +203,14 @@
           this.loading = true;
 
           var self = this;
-          $.get(window.API_URL + '/sessions/' + self.username)
+          $.get(self.getAPIUrl() + '/sessions/' + self.username)
             .done(function(response) {
               self.loading = false;
               self.trends = response.trends;
             })
             .fail(function(error) {
               self.loading = false;
-              self.navigateHome();
+              navigateHome();
             });
         },
         calculateTrend: function() {
@@ -209,7 +231,7 @@
 
           axios({
               method: 'post',
-              url: window.API_URL + '/trends',
+              url: self.getAPIUrl() + '/trends',
               data: {
                 sessionId: self.username,
                 stockSymbol: self.stockSymbol,
@@ -223,18 +245,15 @@
             })
             .catch(function(error) {
               self.loading = false;
-              self.navigateHome();
+              navigateHome();
             });
 
         },
         signOut: function() {
           localStorage.removeItem('username');
 
-          this.navigateHome();
+          navigateHome();
         },
-        navigateHome: function() {
-          window.location = '../home';
-        }
       },
       filters: {
         formatDate: function(value) {

@@ -16,7 +16,7 @@ an implementation of using hadoop to process big data and visualize it in a web 
 
 1. `cd api`
 2. `export AWS_PROFILE=big-data-trends-visualizer`
-3. `mvn package && serverless deploy`
+3. `mvn clean install package -Drelease.version=prod && serverless deploy --stage=prod`
 
 #### Prerequisites
 1. Install nvm, see https://github.com/nvm-sh/nvm

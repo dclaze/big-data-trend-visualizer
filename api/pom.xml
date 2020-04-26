@@ -4,7 +4,7 @@
   <groupId>org.njit</groupId>
   <artifactId>big-data-trend-visualizer-api</artifactId>
   <packaging>jar</packaging>
-  <version>dev</version>
+  <version>${release.version}</version>
   <name>big-data-trend-visualizer-api</name>
 
   <properties>
