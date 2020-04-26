@@ -1,0 +1,681 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "instancei0b1b64271c6583da7": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "DisableApiTermination": "false",
+        "InstanceInitiatedShutdownBehavior": "terminate",
+        "IamInstanceProfile": "arn:aws:iam::722332604409:instance-profile/EMR_EC2_DefaultRole",
+        "ImageId": "ami-00fb5303ba021c30c",
+        "InstanceType": "m5.xlarge",
+        "KeyName": "testing-amazon-linux-for-hadoop",
+        "Monitoring": "false",
+        "Volumes": [
+          {
+            "Device": "/dev/sdb",
+            "VolumeId": {
+              "Ref": "volumevol00d9515e8396a87a8"
+            }
+          },
+          {
+            "Device": "/dev/sdc",
+            "VolumeId": {
+              "Ref": "volumevol0451e00db0f433843"
+            }
+          }
+        ],
+        "NetworkInterfaces": [
+          {
+            "DeleteOnTermination": "true",
+            "DeviceIndex": 0,
+            "SubnetId": "subnet-9e18aad3",
+            "PrivateIpAddresses": [
+              {
+                "PrivateIpAddress": "172.31.23.246",
+                "Primary": "true"
+              }
+            ],
+            "GroupSet": [
+              {
+                "Ref": "sgElasticMapReducemaster"
+              }
+            ],
+            "AssociatePublicIpAddress": "true"
+          }
+        ]
+      }
+    },
+    "instancei05e4a07389d013e39": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "DisableApiTermination": "false",
+        "InstanceInitiatedShutdownBehavior": "terminate",
+        "IamInstanceProfile": "arn:aws:iam::722332604409:instance-profile/EMR_EC2_DefaultRole",
+        "ImageId": "ami-00fb5303ba021c30c",
+        "InstanceType": "m5.xlarge",
+        "KeyName": "testing-amazon-linux-for-hadoop",
+        "Monitoring": "false",
+        "Volumes": [
+          {
+            "Device": "/dev/sdb",
+            "VolumeId": {
+              "Ref": "volumevol0aa7685da06f4f9d7"
+            }
+          },
+          {
+            "Device": "/dev/sdc",
+            "VolumeId": {
+              "Ref": "volumevol0b97529f577a65cf2"
+            }
+          }
+        ],
+        "NetworkInterfaces": [
+          {
+            "DeleteOnTermination": "true",
+            "DeviceIndex": 0,
+            "SubnetId": "subnet-9e18aad3",
+            "PrivateIpAddresses": [
+              {
+                "PrivateIpAddress": "172.31.26.250",
+                "Primary": "true"
+              }
+            ],
+            "GroupSet": [
+              {
+                "Ref": "sgElasticMapReduceslave"
+              }
+            ],
+            "AssociatePublicIpAddress": "true"
+          }
+        ]
+      }
+    },
+    "instancei0862c1177c8a027df": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "DisableApiTermination": "false",
+        "InstanceInitiatedShutdownBehavior": "terminate",
+        "IamInstanceProfile": "arn:aws:iam::722332604409:instance-profile/EMR_EC2_DefaultRole",
+        "ImageId": "ami-00fb5303ba021c30c",
+        "InstanceType": "m5.xlarge",
+        "KeyName": "testing-amazon-linux-for-hadoop",
+        "Monitoring": "false",
+        "Volumes": [
+          {
+            "Device": "/dev/sdb",
+            "VolumeId": {
+              "Ref": "volumevol0e24fa41ba2e6e64d"
+            }
+          },
+          {
+            "Device": "/dev/sdc",
+            "VolumeId": {
+              "Ref": "volumevol0b3230b7e9b0e42bc"
+            }
+          }
+        ],
+        "NetworkInterfaces": [
+          {
+            "DeleteOnTermination": "true",
+            "DeviceIndex": 0,
+            "SubnetId": "subnet-9e18aad3",
+            "PrivateIpAddresses": [
+              {
+                "PrivateIpAddress": "172.31.24.60",
+                "Primary": "true"
+              }
+            ],
+            "GroupSet": [
+              {
+                "Ref": "sgElasticMapReduceslave"
+              }
+            ],
+            "AssociatePublicIpAddress": "true"
+          }
+        ]
+      }
+    },
+    "instancei0b7c78bffd01ec001": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "DisableApiTermination": "false",
+        "InstanceInitiatedShutdownBehavior": "terminate",
+        "IamInstanceProfile": "arn:aws:iam::722332604409:instance-profile/EMR_EC2_DefaultRole",
+        "ImageId": "ami-00fb5303ba021c30c",
+        "InstanceType": "m5.xlarge",
+        "KeyName": "testing-amazon-linux-for-hadoop",
+        "Monitoring": "false",
+        "Volumes": [
+          {
+            "Device": "/dev/sdb",
+            "VolumeId": {
+              "Ref": "volumevol0aead603e55281ec5"
+            }
+          },
+          {
+            "Device": "/dev/sdc",
+            "VolumeId": {
+              "Ref": "volumevol0767140de240ee2e5"
+            }
+          }
+        ],
+        "NetworkInterfaces": [
+          {
+            "DeleteOnTermination": "true",
+            "DeviceIndex": 0,
+            "SubnetId": "subnet-9e18aad3",
+            "PrivateIpAddresses": [
+              {
+                "PrivateIpAddress": "172.31.25.105",
+                "Primary": "true"
+              }
+            ],
+            "GroupSet": [
+              {
+                "Ref": "sgElasticMapReduceslave"
+              }
+            ],
+            "AssociatePublicIpAddress": "true"
+          }
+        ]
+      }
+    },
+    "volumevol0b3230b7e9b0e42bc": {
+      "Type": "AWS::EC2::Volume",
+      "Properties": {
+        "AvailabilityZone": "us-east-1c",
+        "Size": "32",
+        "VolumeType": "gp2"
+      }
+    },
+    "volumevol0b97529f577a65cf2": {
+      "Type": "AWS::EC2::Volume",
+      "Properties": {
+        "AvailabilityZone": "us-east-1c",
+        "Size": "32",
+        "VolumeType": "gp2"
+      }
+    },
+    "volumevol0aa7685da06f4f9d7": {
+      "Type": "AWS::EC2::Volume",
+      "Properties": {
+        "AvailabilityZone": "us-east-1c",
+        "Size": "32",
+        "VolumeType": "gp2"
+      }
+    },
+    "volumevol0e24fa41ba2e6e64d": {
+      "Type": "AWS::EC2::Volume",
+      "Properties": {
+        "AvailabilityZone": "us-east-1c",
+        "Size": "32",
+        "VolumeType": "gp2"
+      }
+    },
+    "volumevol0aead603e55281ec5": {
+      "Type": "AWS::EC2::Volume",
+      "Properties": {
+        "AvailabilityZone": "us-east-1c",
+        "Size": "32",
+        "VolumeType": "gp2"
+      }
+    },
+    "volumevol00d9515e8396a87a8": {
+      "Type": "AWS::EC2::Volume",
+      "Properties": {
+        "AvailabilityZone": "us-east-1c",
+        "Size": "32",
+        "VolumeType": "gp2"
+      }
+    },
+    "volumevol0451e00db0f433843": {
+      "Type": "AWS::EC2::Volume",
+      "Properties": {
+        "AvailabilityZone": "us-east-1c",
+        "Size": "32",
+        "VolumeType": "gp2"
+      }
+    },
+    "volumevol0767140de240ee2e5": {
+      "Type": "AWS::EC2::Volume",
+      "Properties": {
+        "AvailabilityZone": "us-east-1c",
+        "Size": "32",
+        "VolumeType": "gp2"
+      }
+    },
+    "s3nasdaqitch": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "AccessControl": "Private",
+        "VersioningConfiguration": {
+          "Status": "Suspended"
+        }
+      }
+    },
+    "queueAWSElasticMapReducej3KGLDAX99VGJL": {
+      "Type": "AWS::SQS::Queue",
+      "Properties": {
+        "DelaySeconds": "0",
+        "MaximumMessageSize": "262144",
+        "MessageRetentionPeriod": "86400",
+        "ReceiveMessageWaitTimeSeconds": "10",
+        "VisibilityTimeout": "30"
+      }
+    },
+    "sgElasticMapReduceslave": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Slave group for Elastic MapReduce created on 2020-04-20T16:36:38.409Z",
+        "VpcId": "vpc-411e203b"
+      }
+    },
+    "sgElasticMapReducemaster": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Master group for Elastic MapReduce created on 2020-04-20T16:36:38.409Z",
+        "VpcId": "vpc-411e203b"
+      }
+    },
+    "s3policycodepipelineuseast1375067685408": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": "codepipeline-us-east-1-375067685408",
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Id": "SSEAndSSLPolicy",
+          "Statement": [
+            {
+              "Sid": "DenyUnEncryptedObjectUploads",
+              "Effect": "Deny",
+              "Principal": "*",
+              "Action": "s3:PutObject",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:s3:::",
+                    "codepipeline-us-east-",
+                    "1-375067685408/*"
+                  ]
+                ]
+              },
+              "Condition": {
+                "StringNotEquals": {
+                  "s3:x-amz-server-side-encryption": "aws:kms"
+                }
+              }
+            },
+            {
+              "Sid": "DenyInsecureConnections",
+              "Effect": "Deny",
+              "Principal": "*",
+              "Action": "s3:*",
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:s3:::",
+                    "codepipeline-us-east-",
+                    "1-375067685408/*"
+                  ]
+                ]
+              },
+              "Condition": {
+                "Bool": {
+                  "aws:SecureTransport": "false"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "ingress1": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticMapReduceslave"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "0",
+        "ToPort": "65535",
+        "SourceSecurityGroupId": {
+          "Ref": "sgElasticMapReduceslave"
+        },
+        "SourceSecurityGroupOwnerId": "722332604409"
+      }
+    },
+    "ingress2": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticMapReduceslave"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "0",
+        "ToPort": "65535",
+        "SourceSecurityGroupId": {
+          "Ref": "sgElasticMapReducemaster"
+        },
+        "SourceSecurityGroupOwnerId": "722332604409"
+      }
+    },
+    "ingress3": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticMapReduceslave"
+        },
+        "IpProtocol": "udp",
+        "FromPort": "0",
+        "ToPort": "65535",
+        "SourceSecurityGroupId": {
+          "Ref": "sgElasticMapReducemaster"
+        },
+        "SourceSecurityGroupOwnerId": "722332604409"
+      }
+    },
+    "ingress4": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticMapReduceslave"
+        },
+        "IpProtocol": "udp",
+        "FromPort": "0",
+        "ToPort": "65535",
+        "SourceSecurityGroupId": {
+          "Ref": "sgElasticMapReduceslave"
+        },
+        "SourceSecurityGroupOwnerId": "722332604409"
+      }
+    },
+    "ingress5": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticMapReduceslave"
+        },
+        "IpProtocol": "icmp",
+        "FromPort": "-1",
+        "ToPort": "-1",
+        "SourceSecurityGroupId": {
+          "Ref": "sgElasticMapReducemaster"
+        },
+        "SourceSecurityGroupOwnerId": "722332604409"
+      }
+    },
+    "ingress6": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticMapReduceslave"
+        },
+        "IpProtocol": "icmp",
+        "FromPort": "-1",
+        "ToPort": "-1",
+        "SourceSecurityGroupId": {
+          "Ref": "sgElasticMapReduceslave"
+        },
+        "SourceSecurityGroupOwnerId": "722332604409"
+      }
+    },
+    "ingress7": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticMapReducemaster"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "0",
+        "ToPort": "65535",
+        "SourceSecurityGroupId": {
+          "Ref": "sgElasticMapReduceslave"
+        },
+        "SourceSecurityGroupOwnerId": "722332604409"
+      }
+    },
+    "ingress8": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticMapReducemaster"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "0",
+        "ToPort": "65535",
+        "SourceSecurityGroupId": {
+          "Ref": "sgElasticMapReducemaster"
+        },
+        "SourceSecurityGroupOwnerId": "722332604409"
+      }
+    },
+    "ingress9": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticMapReducemaster"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "8443",
+        "ToPort": "8443",
+        "CidrIp": "207.171.167.25/32"
+      }
+    },
+    "ingress10": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticMapReducemaster"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "8443",
+        "ToPort": "8443",
+        "CidrIp": "54.240.217.8/29"
+      }
+    },
+    "ingress11": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticMapReducemaster"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "8443",
+        "ToPort": "8443",
+        "CidrIp": "72.21.196.64/29"
+      }
+    },
+    "ingress12": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticMapReducemaster"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "8443",
+        "ToPort": "8443",
+        "CidrIp": "72.21.198.64/29"
+      }
+    },
+    "ingress13": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticMapReducemaster"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "8443",
+        "ToPort": "8443",
+        "CidrIp": "54.240.217.16/29"
+      }
+    },
+    "ingress14": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticMapReducemaster"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "8443",
+        "ToPort": "8443",
+        "CidrIp": "54.239.98.0/24"
+      }
+    },
+    "ingress15": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticMapReducemaster"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "8443",
+        "ToPort": "8443",
+        "CidrIp": "207.171.167.101/32"
+      }
+    },
+    "ingress16": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticMapReducemaster"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "8443",
+        "ToPort": "8443",
+        "CidrIp": "207.171.167.26/32"
+      }
+    },
+    "ingress17": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticMapReducemaster"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "8443",
+        "ToPort": "8443",
+        "CidrIp": "72.21.217.0/24"
+      }
+    },
+    "ingress18": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticMapReducemaster"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "8443",
+        "ToPort": "8443",
+        "CidrIp": "54.240.217.80/29"
+      }
+    },
+    "ingress19": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticMapReducemaster"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "8443",
+        "ToPort": "8443",
+        "CidrIp": "54.240.217.64/28"
+      }
+    },
+    "ingress20": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticMapReducemaster"
+        },
+        "IpProtocol": "tcp",
+        "FromPort": "8443",
+        "ToPort": "8443",
+        "CidrIp": "207.171.172.6/32"
+      }
+    },
+    "ingress21": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticMapReducemaster"
+        },
+        "IpProtocol": "udp",
+        "FromPort": "0",
+        "ToPort": "65535",
+        "SourceSecurityGroupId": {
+          "Ref": "sgElasticMapReducemaster"
+        },
+        "SourceSecurityGroupOwnerId": "722332604409"
+      }
+    },
+    "ingress22": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticMapReducemaster"
+        },
+        "IpProtocol": "udp",
+        "FromPort": "0",
+        "ToPort": "65535",
+        "SourceSecurityGroupId": {
+          "Ref": "sgElasticMapReduceslave"
+        },
+        "SourceSecurityGroupOwnerId": "722332604409"
+      }
+    },
+    "ingress23": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticMapReducemaster"
+        },
+        "IpProtocol": "icmp",
+        "FromPort": "-1",
+        "ToPort": "-1",
+        "SourceSecurityGroupId": {
+          "Ref": "sgElasticMapReducemaster"
+        },
+        "SourceSecurityGroupOwnerId": "722332604409"
+      }
+    },
+    "ingress24": {
+      "Type": "AWS::EC2::SecurityGroupIngress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticMapReducemaster"
+        },
+        "IpProtocol": "icmp",
+        "FromPort": "-1",
+        "ToPort": "-1",
+        "SourceSecurityGroupId": {
+          "Ref": "sgElasticMapReduceslave"
+        },
+        "SourceSecurityGroupOwnerId": "722332604409"
+      }
+    },
+    "egress1": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticMapReduceslave"
+        },
+        "IpProtocol": "-1",
+        "CidrIp": "0.0.0.0/0"
+      }
+    },
+    "egress2": {
+      "Type": "AWS::EC2::SecurityGroupEgress",
+      "Properties": {
+        "GroupId": {
+          "Ref": "sgElasticMapReducemaster"
+        },
+        "IpProtocol": "-1",
+        "CidrIp": "0.0.0.0/0"
+      }
+    }
+  },
+  "Description": "Template to create an EMR cluster with one master and three slave nodes running Hadoop on m5.xlarge."
+}
