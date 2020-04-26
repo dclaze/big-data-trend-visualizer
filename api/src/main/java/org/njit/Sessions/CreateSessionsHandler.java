@@ -37,10 +37,10 @@ public class CreateSessionsHandler extends DefaultSessionsHandler {
 
             logger.info("Stored session, returning OK.");
 
-            return ApiGatewayProxyResponse.builder()
-                    .withStatusCode(HttpStatusCode.OK)
-                    .withObjectBody(session)
-                    .build();
+                return ApiGatewayProxyResponse.builder()
+                        .withStatusCode(HttpStatusCode.OK)
+                        .withObjectBody(session)
+                        .build();
         }
     }
 }

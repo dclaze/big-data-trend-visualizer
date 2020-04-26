@@ -8,27 +8,29 @@ import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.njit.common.Session;
 import org.njit.common.SessionsStore;
-import org.njit.common.StockTrend;
+import org.njit.common.Trend;
+import org.njit.common.TrendsStore;
 import org.njit.common.apigateway.ApiGatewayProxyRequest;
 import org.njit.common.apigateway.ApiGatewayProxyResponse;
 import org.njit.common.apigateway.HttpStatusCode;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.UUID;
 
 public class CreateTrendsHandler implements RequestHandler<ApiGatewayProxyRequest, ApiGatewayProxyResponse> {
     private static final Logger logger = LogManager.getLogger(CreateTrendsHandler.class);
 
     private final SessionsStore sessionStore;
+    private final TrendsStore trendsStore;
 
     public CreateTrendsHandler() {
         this.sessionStore = new SessionsStore();
+        this.trendsStore = new TrendsStore();
     }
 
     private boolean hasTrendRequest(final ApiGatewayProxyRequest request) {
         try {
-            getTrendRequest(request);
+            getCreateTrendRequest(request);
         } catch (IOException | ParseException e) {
             logger.error(e);
             return false;
@@ -37,10 +39,10 @@ public class CreateTrendsHandler implements RequestHandler<ApiGatewayProxyReques
         return true;
     }
 
-    private StockTrendRequest getTrendRequest(final ApiGatewayProxyRequest request) throws IOException, ParseException {
+    private CreateTrendsRequest getCreateTrendRequest(final ApiGatewayProxyRequest request) throws IOException, ParseException {
         final JsonNode body = new ObjectMapper().readTree(request.getBody());
 
-        return new StockTrendRequest(body.get("sessionId").asText(),
+        return new CreateTrendsRequest(body.get("sessionId").asText(),
                 body.get("stockSymbol").asText(),
                 body.get("date").asText());
     }
@@ -58,13 +60,17 @@ public class CreateTrendsHandler implements RequestHandler<ApiGatewayProxyReques
         }
 
         try {
-
-            final StockTrendRequest trendRequest = getTrendRequest(request);
+            final CreateTrendsRequest trendRequest = getCreateTrendRequest(request);
             logger.info(String.format("trend request is valid %s", trendRequest));
             logger.info("Trend request is valid, getting the latest.");
             final Session session = sessionStore.get(trendRequest.getSessionId());
+
+            logger.info("storing new trend.");
+            final Trend trend = new Trend(trendRequest.getStockSymbol(), trendRequest.getDate());
+            trendsStore.save(trend);
+
             logger.info("session is valid, updating");
-            session.addTrend(new StockTrend(UUID.randomUUID().toString(), trendRequest.getStockSymbol(), trendRequest.getDate()));
+            session.addTrend(new Session.TrendRequest(trend.getId(), trend.getStockSymbol(), trend.getDate()));
             logger.info("session is valid, saving.");
             sessionStore.save(session);
 

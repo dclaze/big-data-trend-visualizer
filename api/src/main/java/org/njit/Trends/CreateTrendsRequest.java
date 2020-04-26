@@ -1,17 +1,15 @@
 package org.njit.Trends;
 
-import java.util.Date;
-
-public class StockTrendRequest {
+public class CreateTrendsRequest {
     private String sessionId;
     private String stockSymbol;
     private String date;
 
-    public StockTrendRequest() {}
+    public CreateTrendsRequest() {}
 
-    public StockTrendRequest(final String sessionId,
-                             final String stockSymbol,
-                             final String date) {
+    public CreateTrendsRequest(final String sessionId,
+                               final String stockSymbol,
+                               final String date) {
         this.sessionId = sessionId;
         this.stockSymbol = stockSymbol;
         this.date = date;

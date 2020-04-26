@@ -17,13 +17,28 @@
   <script type="text/javascript" src="../bower_components/moment/moment.js"></script>
   <script type="text/javascript" src="../bower_components/axios/dist/axios.min.js"></script>
   <style media="screen">
+    .trend-container {
+      margin: auto;
+    }
+
+    .trend-container:not(:first-child) {
+        margin-top: 5px;
+    }
+
     .trend {
-      border: solid 1px black;
       margin: 10px;
     }
 
     .trend-label {
       margin-top: 6px;
+    }
+
+    .trend-icon {
+      position: absolute;
+      top: 0;
+      right: 0;
+      margin: 5px;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -105,7 +120,10 @@
         </div>
         <div v-else>
           <div class="box">
-            <div class="columns" v-for="trend in trends">
+            <div class="columns trend-container card" v-for="trend in trends">
+              <span class="icon trend-icon" @click="deleteTrend(trend)" v-bind:disabled="trend.loading">
+                <i class="fas fa-times-circle"></i>
+              </span>
               <div class="column is-one-quarters">
                 <div class="field is-horizontal">
                   <div class="field-label is-normal">
@@ -125,9 +143,24 @@
                 </div>
               </div>
               <div class="trend column is-three-quarters">
-                {{trend.status}}
-
-                TODO ADD SOME GRAPHS HERE OR SOMETHING
+                <div class="container">
+                  <div class="level">
+                    <div class="level-item has-text-centered">
+                      <div v-if="trend.isComplete">
+                        <div v-if="!trend.data">
+                          <button class="button is-small" @click="loadTrend(trend)" v-bind:disabled="trend.loading">Load Graph</button>
+                        </div>
+                        <div v-else>
+                          SHOW GRAPH HERE
+                        </div>
+                      </div>
+                      <div v-else>
+                        Calculating
+                        <button class="button is-small" @click="loadTrend(trend)" style="margin-left: 10px;" v-bind:disabled="trend.loading">Refresh</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -228,7 +261,6 @@
           this.loading = true;
 
           var self = this;
-
           axios({
               method: 'post',
               url: self.getAPIUrl() + '/trends',
@@ -247,7 +279,40 @@
               self.loading = false;
               navigateHome();
             });
-
+        },
+        loadTrend: function (trend) {
+          trend.loading = true;
+          axios({
+              method: 'get',
+              url: this.getAPIUrl() + '/trends/' + trend.id,
+              responseType: 'json',
+            })
+            .then(function(response) {
+              trend.data = response.data.data;
+              trend.isComplete = response.data.isComplete;
+              trend.loading = false;
+            })
+            .catch(function(error) {
+              trend.loading = false;
+            });
+        },
+        deleteTrend: function (trend) {
+          trend.loading = true;
+          var self = this;
+          axios({
+              method: 'delete',
+              url: this.getAPIUrl() + '/sessions/' + self.username +  '/trends/' + trend.id,
+              responseType: 'json',
+            })
+            .then(function(response) {
+              const index = self.trends.indexOf(trend);
+              if (index > -1) {
+                self.trends.splice(index, 1);
+              }
+            })
+            .catch(function(error) {
+              trend.loading = false;
+            });
         },
         signOut: function() {
           localStorage.removeItem('username');
