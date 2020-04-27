@@ -16,13 +16,14 @@
   <script type="text/javascript" src="../bower_components/bulma-calendar/dist/js/bulma-calendar.min.js"></script>
   <script type="text/javascript" src="../bower_components/moment/moment.js"></script>
   <script type="text/javascript" src="../bower_components/axios/dist/axios.min.js"></script>
+  <script type="text/javascript" src="../bower_components/d3/d3.min.js"></script>
   <style media="screen">
     .trend-container {
       margin: auto;
     }
 
     .trend-container:not(:first-child) {
-        margin-top: 5px;
+      margin-top: 5px;
     }
 
     .trend {
@@ -41,6 +42,28 @@
       cursor: pointer;
     }
   </style>
+  <style type="text/css">
+    .line {
+      fill: none;
+      stroke: #ffab00;
+      stroke-width: 3;
+    }
+
+    .overlay {
+      fill: none;
+      pointer-events: all;
+    }
+
+    .dot {
+      fill: #ffab00;
+      stroke: #fff;
+    }
+
+    .focus circle {
+      fill: none;
+      stroke: steelblue;
+    }
+  </style>
 </head>
 
 <body>
@@ -48,8 +71,8 @@
     <nav class="navbar is-black" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <a class="navbar-item title is-dark">
-        Big Data Trends Visualizer
-      </a>
+          Big Data Trends Visualizer
+        </a>
       </div>
       <div class="navbar-menu">
         <!-- Left Align Menu Items -->
@@ -58,8 +81,8 @@
         <div class="navbar-item">
           <div class="has-text-centered">
             <span class="icon">
-            <i class="fas fa-user"></i>
-          </span>
+              <i class="fas fa-user"></i>
+            </span>
             <div class="">
               {{username}}
             </div>
@@ -94,12 +117,15 @@
           </div>
           <div class="field">
             <div class="control">
-              <input v-model="date" ref="calendarTrigger" class="input" data-color="info" type="date" data-show-footer="false" data-show-buttons="false" data-show-header="false" data-show-buttons="false" data-show-clear-button="false">
+              <input v-model="date" ref="calendarTrigger" class="input" data-color="info" type="date"
+                data-show-footer="false" data-show-buttons="false" data-show-header="false" data-show-buttons="false"
+                data-show-clear-button="false">
             </div>
           </div>
           <div class="field">
             <div class="control">
-              <button class="button is-link" @click="calculateTrend()" :disabled="loading" v-bind:class="{ 'is-loading': loading }">Calculate Trend</button>
+              <button class="button is-link" @click="calculateTrend()" :disabled="loading"
+                v-bind:class="{ 'is-loading': loading }">Calculate Trend</button>
             </div>
           </div>
         </div>
@@ -148,7 +174,8 @@
                     <div class="level-item has-text-centered">
                       <div v-if="trend.isComplete">
                         <div v-if="!trend.data">
-                          <button class="button is-small" @click="loadTrend(trend)" v-bind:disabled="trend.loading">Load Graph</button>
+                          <button class="button is-small" @click="loadTrend(trend)" v-bind:disabled="trend.loading">Load
+                            Graph</button>
                         </div>
                         <div v-else>
                           SHOW GRAPH HERE
@@ -156,7 +183,8 @@
                       </div>
                       <div v-else>
                         Calculating
-                        <button class="button is-small" @click="loadTrend(trend)" style="margin-left: 10px;" v-bind:disabled="trend.loading">Refresh</button>
+                        <button class="button is-small" @click="loadTrend(trend)" style="margin-left: 10px;"
+                          v-bind:disabled="trend.loading">Refresh</button>
                       </div>
                     </div>
                   </div>
@@ -209,15 +237,15 @@
           startDate: this.date,
         })[0];
         var self = this;
-        calendar.on('select', function(e) {
-            self.date = e.start || e.data.startDate|| null;
+        calendar.on('select', function (e) {
+          self.date = e.start || e.data.startDate || null;
         });
       },
-      created: function() {
+      created: function () {
         this.initializeSession();
       },
       methods: {
-        getAPIUrl: function() {
+        getAPIUrl: function () {
           let stage = getQueryStringValue('stage');
 
           if (stage === 'dev') {
@@ -226,7 +254,7 @@
 
           return window.API_URL_PROD;
         },
-        initializeSession: function() {
+        initializeSession: function () {
           if (!this.username) {
             navigateHome();
 
@@ -237,16 +265,16 @@
 
           var self = this;
           $.get(self.getAPIUrl() + '/sessions/' + self.username)
-            .done(function(response) {
+            .done(function (response) {
               self.loading = false;
               self.trends = response.trends;
             })
-            .fail(function(error) {
+            .fail(function (error) {
               self.loading = false;
               navigateHome();
             });
         },
-        calculateTrend: function() {
+        calculateTrend: function () {
           if (!this.username || !this.stockSymbol || !this.date) {
             this.error = "Missing fields, try choosing one of the above fields. " + JSON.stringify({
               username: this.username,
@@ -262,20 +290,20 @@
 
           var self = this;
           axios({
-              method: 'post',
-              url: self.getAPIUrl() + '/trends',
-              data: {
-                sessionId: self.username,
-                stockSymbol: self.stockSymbol,
-                date: new Date(self.date).toISOString(),
-              },
-              responseType: 'json',
-            })
-            .then(function(response) {
+            method: 'post',
+            url: self.getAPIUrl() + '/trends',
+            data: {
+              sessionId: self.username,
+              stockSymbol: self.stockSymbol,
+              date: new Date(self.date).toISOString(),
+            },
+            responseType: 'json',
+          })
+            .then(function (response) {
               self.loading = false;
               self.trends = response.data.trends;
             })
-            .catch(function(error) {
+            .catch(function (error) {
               self.loading = false;
               navigateHome();
             });
@@ -283,16 +311,16 @@
         loadTrend: function (trend) {
           trend.loading = true;
           axios({
-              method: 'get',
-              url: this.getAPIUrl() + '/trends/' + trend.id,
-              responseType: 'json',
-            })
-            .then(function(response) {
+            method: 'get',
+            url: this.getAPIUrl() + '/trends/' + trend.id,
+            responseType: 'json',
+          })
+            .then(function (response) {
               trend.data = response.data.data;
               trend.isComplete = response.data.isComplete;
               trend.loading = false;
             })
-            .catch(function(error) {
+            .catch(function (error) {
               trend.loading = false;
             });
         },
@@ -300,28 +328,28 @@
           trend.loading = true;
           var self = this;
           axios({
-              method: 'delete',
-              url: this.getAPIUrl() + '/sessions/' + self.username +  '/trends/' + trend.id,
-              responseType: 'json',
-            })
-            .then(function(response) {
+            method: 'delete',
+            url: this.getAPIUrl() + '/sessions/' + self.username + '/trends/' + trend.id,
+            responseType: 'json',
+          })
+            .then(function (response) {
               const index = self.trends.indexOf(trend);
               if (index > -1) {
                 self.trends.splice(index, 1);
               }
             })
-            .catch(function(error) {
+            .catch(function (error) {
               trend.loading = false;
             });
         },
-        signOut: function() {
+        signOut: function () {
           localStorage.removeItem('username');
 
           navigateHome();
         },
       },
       filters: {
-        formatDate: function(value) {
+        formatDate: function (value) {
           if (value) {
             return moment(String(value)).format('MM/DD/YYYY')
           }
