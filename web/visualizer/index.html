@@ -172,13 +172,14 @@
                 <div class="container">
                   <div class="level">
                     <div class="level-item has-text-centered">
-                      <div v-if="trend.isComplete">
-                        <div v-if="!trend.data">
+                      <!-- Changed both conditions(isComplete and trend.data) to render graph () -->
+                      <div v-if="!trend.isComplete">
+                        <div v-if="trend.data">
                           <button class="button is-small" @click="loadTrend(trend)" v-bind:disabled="trend.loading">Load
                             Graph</button>
                         </div>
                         <div v-else>
-                          SHOW GRAPH HERE
+                          <div :id="'data-graph-'+trend.id"></div>
                         </div>
                       </div>
                       <div v-else>
@@ -268,6 +269,13 @@
             .done(function (response) {
               self.loading = false;
               self.trends = response.trends;
+
+              // Rendering the graphs if doc is ready
+              $(document).ready(function () {
+                if (self.trends) {
+                  self.drawGraphs();
+                }
+              });
             })
             .fail(function (error) {
               self.loading = false;
@@ -309,6 +317,7 @@
             });
         },
         loadTrend: function (trend) {
+
           trend.loading = true;
           axios({
             method: 'get',
@@ -319,6 +328,8 @@
               trend.data = response.data.data;
               trend.isComplete = response.data.isComplete;
               trend.loading = false;
+              // Can either renderGraph() here Or within initSesision()
+
             })
             .catch(function (error) {
               trend.loading = false;
@@ -346,6 +357,129 @@
           localStorage.removeItem('username');
 
           navigateHome();
+        },
+        renderGraph: function (data, id) {
+
+          // Renders the graph into the following id
+          // #data-graph-<trend.id>
+
+          // Note: call this function only after the document is ready
+
+          // currently requires data in format
+          //data = [{ y: 10 }, { y: 11 }];
+
+          // To change the data's structure 
+          //search for d.y and replace with d.[newAttrName]
+
+
+          var margin = { top: 10, right: 20, bottom: 50, left: 70 }
+            , width = 800 - margin.left - margin.right
+            , height = 400 - margin.top - margin.bottom;
+
+          var n = 24;
+
+          var x_label = "Hours"
+          var y_label = "Prices"
+
+          var tickTypes = {
+            "day": 24,
+            "month": 12,
+            "year": 12,
+          }
+
+          var tickType = "day"
+
+          var MAX = d3.max(data, function (d) { return +d.y; });
+          var MIN = 1000
+
+          if (data) {
+            var dataset = data;
+          }
+
+          var xScale = d3.scaleLinear()
+            .domain([0, n - 1])
+            .range([0, width]);
+
+          var yScale = d3.scaleLinear()
+            .domain([0, MAX])
+            .range([height, 0]);
+
+          var line = d3.line()
+            .x(function (d, i) { return xScale(i); })
+            .y(function (d) { return yScale(d.y); })
+            .curve(d3.curveMonotoneX)
+
+          var svg = d3.select("#data-graph-" + id)
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+          svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(xScale).ticks(tickTypes[tickType]));
+
+          svg.append("text")
+            .attr("transform",
+              "translate(" + (width / 2) + " ," +
+              (height + margin.top + 30) + ")")
+            .style("text-anchor", "middle")
+            .text(x_label);
+
+          svg.append("g")
+            .attr("class", "y axis")
+            .call(d3.axisLeft(yScale));
+
+          svg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 - margin.left)
+            .attr("x", 0 - (height / 2))
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .text(y_label);
+
+          svg.append("path")
+            .datum(dataset)
+            .attr("class", "line")
+            .attr("d", line);
+
+          var tooltip = d3.select("body")
+            .append("div")
+            .style("position", "absolute")
+            .style("z-index", "10")
+            .style("visibility", "hidden")
+            .style("border", "2px solid steelblue")
+            .style("background", "#fff")
+            .style("padding", "4px")
+            .style("border-radius", "4px")
+            .text("a simple tooltip");
+
+          svg.selectAll(".dot")
+            .data(dataset)
+            .enter().append("circle")
+            .attr("class", "dot")
+            .attr("cx", function (d, i) { return xScale(i) })
+            .attr("cy", function (d) { return yScale(d.y) })
+            .attr("r", 5)
+            .on("mouseover", function (d) { tooltip.text(d.y); return tooltip.style("visibility", "visible"); })
+            .on("mousemove", function () { return tooltip.style("top", (d3.event.pageY - 10) + "px").style("left", (d3.event.pageX + 10) + "px"); })
+            .on("mouseout", function () { return tooltip.style("visibility", "hidden"); });
+        },
+        drawGraphs: function () {
+          var self = this;
+          //console.log(self.trends);
+          self.trends.forEach(function (trend, index) {
+            // var dataset = trend.prices
+            var dataset = d3.range(24).map(function (d) { return { "y": d3.randomUniform(2000)() } });
+            if (index == 1) {
+              //console.log("index01")
+              dataset = d3.range(14).map(function (d) { return { "y": d3.randomUniform(4000)() } });
+            }
+            self.renderGraph(dataset, trend.id);
+          });
+
         },
       },
       filters: {
