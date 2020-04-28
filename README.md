@@ -8,7 +8,7 @@ an implementation of using hadoop to process big data and visualize it in a web 
 
 
 ## Design
-![design](https://docs.google.com/drawings/d/e/2PACX-1vRg5tLiMZQMVOzlVNXohsZ4fYRICpZPz2uCeUSxUwCrHvEfHw_jsEnCTbVxwTIrlL2DLpt2rN6OAdJ5/pub?w=2077&h=1553)
+![design](https://docs.google.com/drawings/d/e/2PACX-1vSXhuuYTnFXRdROsxt5NxPGuYGbzdsBKfZUtsAnEB2mGgUBBxlTt7DSAw4Af_JMZ9za8aVBkiFlz2fC/pub?w=2077&h=1553)
 
 ## API
 ### Deploy
@@ -35,10 +35,6 @@ an implementation of using hadoop to process big data and visualize it in a web 
    aws_secret_access_key = ****************************************
    ```
 
-## Resources
-- [Google Drive Assets](https://drive.google.com/open?id=1LiMbmS4jtuIU6pJq253PPsLLYdJVAwwY)
-
-
 ## Web
 The web front is composed of 2 views `web/home/index.html` and `web/visualizer/index.html`
 
@@ -55,7 +51,7 @@ The web front is composed of 2 views `web/home/index.html` and `web/visualizer/i
 4. IMPORTANT: We are using github pages to host the webpage, please check in all `bower_components` files
 
 
-## Contribute to VWAP Visualization
+## VWAP Visualization
 Our planned prototype will target a VWAP Visualization. The idea is to create a visualization for the [Nasdaq ITCH data](ftp://emi.nasdaq.com/ITCH/) and generate a [Volume Weighted Average Price](https://www.investopedia.com/terms/v/vwap.asp) visualization.
 
 1. Add front end visualization to `web/visualizer/index.html`
@@ -69,3 +65,11 @@ Our planned prototype will target a VWAP Visualization. The idea is to create a 
 
 4. Connect the input and output of Hadoop result to the API
   > Integrate our on-deman API with the Hadoop cluster. This requires us to deliver the input and output to the Hadoop cluster, store it somewhere to be retrieved, and wire it up to an API that returns the result to the customer
+
+## Hadoop
+To see the Hadoop VWAP implementation, see `/hadoop`. This code is responsible for converting from ITCH-5.0 to a data trend for a given stock symbol. To see more details on how we convert from Nasdaq ITCH see `data/nasdaq/README.md`.
+
+The main hadoop application can be found at `hadoop/src/main/java/dk/njit/cs643/itch50/vwap/VWAP.java`
+
+## Resources
+  - [Google Drive Assets](https://drive.google.com/open?id=1LiMbmS4jtuIU6pJq253PPsLLYdJVAwwY)
